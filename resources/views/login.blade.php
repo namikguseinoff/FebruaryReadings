@@ -8,7 +8,8 @@ Login | FebruaryReadings
 <div class="limiter">
     <div class="container-login100">
       <div class="wrap-login100 p-l-85 p-r-85 p-t-55 p-b-55">
-        <form class="login100-form validate-form flex-sb flex-w">
+        <form class="login100-form validate-form flex-sb flex-w" method="POST" action="{{ route('login') }}">
+            @csrf
             <span class="login100-form-title p-b-32">
                 Account Login
             </span>

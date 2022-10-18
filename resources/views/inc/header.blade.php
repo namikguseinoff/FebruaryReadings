@@ -27,6 +27,7 @@
                 <!-- other language options -->
               </select>
         </form>
+        <a href = "quit">Quit</a>
 
         
       </div>

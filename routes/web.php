@@ -1,42 +1,41 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+
+$ControllerPath = 'App\Http\Controllers';
+
+Route::view('/home', 'home')->middleware('auth')->name('home');
 
 Route::get('/', function () {
     if (!Auth::check()) {
-        return redirect(route('user.login'));
+        return redirect(route('login'));
     }
-});
+    return view('home');
+})->name('home');
 
-Route::name('user.')->group(function() {
-    Route::view('/private', 'private')->middleware('auth')->name('private');
+Route::get('/login', function() {
+    if (Auth::check()) {
+        return redirect(route('home'));
+    }
+    return view('login');
+})->name('login');
 
-    Route::get('/login', function() {
-        if (Auth::check()) {
-            return redirect(route('user.private'));
-        }
-        return view('login');
-    })->name('login');
+Route::post('/login', [AuthController::class, 'Login'])->name('login-post');
 
-    Route::get('/login/recover', function() {
-        if (Auth::check()) {
-            return redirect(route('user.private'));
-        }
-        return view('recover');
-    })->name('recover');
+Route::get('/register', function() {
+    if(Auth::check()) {
+        return redirect(route('home'));
+    }
+    return view('register');
+})->name('register');
 
-    Route::get('/register', function () {
-        if (Auth::check()) {
-            return redirect(route('user.private'));
-        }
-        return view('register');
-    });
+Route::get('/quit', function() {
+    if (Auth::check()) {
+        Session::flush();
+        Auth::logout();
+        return redirect(route('login'));
+    }
+})->name('quit');
 
-    Route::post('/register', [\App\Http\Controllers\RegisterController::class, 'save']);
-
-});
-
-
-Route::get('/FR2023', function () {
-    return view('welcome');
-});
+Route::post('/register', [AuthController::class, 'save'])->name('register-post');
